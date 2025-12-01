@@ -2,8 +2,10 @@
 
 #include <iostream>
 #include <optional>
+#include <limits>
+#include <string_view>
 
-const std::filesystem::path devices_path("/dev/input/by-path");
+constexpr std::string_view devices_path = "/dev/input/by-path";
 
 std::optional<std::filesystem::path> find_first_keyboard_device_file()
 {
@@ -33,17 +35,19 @@ senku::input::input_event senku::input::drivers::linux_keyboard::poll()
 {
 	senku::input::input_event e;
 
+	bool got_valid_key = false;
 	do
 	{
 		device_file.read(reinterpret_cast<char*>(&event_cache), sizeof(event_cache));
 
 		if (event_cache.type == EV_KEY)
-			e = {
-				.button_code = event_cache.code,
-				.button_state = event_cache.value == 0? senku::input::button_states::released : senku::input::button_states::pressed
-			};
+			if (got_valid_key = (event_cache.code <= std::numeric_limits<button_code_type>::max()))
+				e = {
+					.button_code = static_cast<button_code_type>(event_cache.code),
+					.button_state = event_cache.value == 0? senku::input::button_states::released : senku::input::button_states::pressed
+				};
 	}
-	while (event_cache.type != EV_SYN);
+	while (event_cache.type != EV_SYN || !got_valid_key);
 
 	return e;
 }

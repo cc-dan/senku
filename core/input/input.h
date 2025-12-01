@@ -2,11 +2,15 @@
 
 #include <fstream>
 #include <linux/input.h>
+#include <array>
+#include <limits>
 
 namespace senku
 {
 	namespace input
 	{
+		using button_code_type = std::uint8_t;
+
 		enum button_states
 		{
 			released, pressed
@@ -14,7 +18,7 @@ namespace senku
 
 		struct input_event
 		{
-			unsigned short button_code;
+			button_code_type button_code;
 			button_states button_state;
 		};
 
@@ -23,5 +27,11 @@ namespace senku
 		public:
 			virtual input_event poll() = 0;
 		};
+
+		void process();
+		bool is_pressed(button_code_type code);
+		bool is_just_pressed(button_code_type code);
+		bool is_released(button_code_type code);
+		bool is_just_released(button_code_type code);
 	}
 }
