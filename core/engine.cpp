@@ -6,7 +6,7 @@
 #include <chrono>
 
 void
-senku::engine::start(std::function<bool(const float dt)> step)
+senku::engine::start(std::function<bool(const float)> step)
 {
 	bool exit = false;
 	std::chrono::steady_clock::time_point last_frame_start = std::chrono::steady_clock::now();
