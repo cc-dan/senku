@@ -2,7 +2,6 @@
 #include "input/input.h"
 
 #include <iostream>
-#include <thread>
 #include <chrono>
 
 void
@@ -16,7 +15,7 @@ senku::engine::start(std::function<bool(const float)> step)
 		const std::chrono::duration<float, std::deca> time_passed = this_frame_start - last_frame_start;
 		last_frame_start = this_frame_start;
 
-		senku::input::process(); // TODO: non-blocking
+		senku::input::process();
 		exit = !step(time_passed.count());
 		senku::engine::tick++;
 	}

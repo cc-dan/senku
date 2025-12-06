@@ -26,8 +26,9 @@ std::array<button_state, std::numeric_limits<senku::input::button_code_type>::ma
 void
 senku::input::process()
 {
-	const senku::input::input_event e = input_event_source->poll();
-	state_per_button_code[e.button_code].set_state(e.button_state);
+	const auto event = input_event_source->poll();
+	if (event)
+		state_per_button_code[event->button_code].set_state(event->button_state);
 }
 
 bool
@@ -39,7 +40,7 @@ senku::input::is_pressed(senku::input::button_code_type code)
 bool
 senku::input::is_just_pressed(senku::input::button_code_type code)
 {
-	return senku::input::is_pressed(code) && state_per_button_code[code].previous_state == senku::input::button_states::released;
+	return senku::input::is_pressed(code) && state_per_button_code[code].timestamp == senku::engine::tick;
 }
 
 bool
@@ -52,6 +53,5 @@ bool
 senku::input::is_just_released(senku::input::button_code_type code)
 {
 	return senku::input::is_released(code) &&
-	       state_per_button_code[code].previous_state == senku::input::pressed &&
 	       state_per_button_code[code].timestamp == senku::engine::tick;
 }

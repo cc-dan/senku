@@ -1,9 +1,10 @@
 #pragma once
 
-#include <fstream>
+#include <cstdint>
 #include <linux/input.h>
 #include <array>
 #include <limits>
+#include <optional>
 
 namespace senku
 {
@@ -25,7 +26,7 @@ namespace senku
 		class input_source
 		{
 		public:
-			virtual input_event poll() = 0;
+			virtual std::optional<input_event> poll() = 0;
 		};
 
 		void process();

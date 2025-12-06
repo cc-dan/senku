@@ -17,9 +17,9 @@ namespace senku
 			{
 			public:
 				linux_keyboard();
-				input_event poll() override;
+				std::optional<input_event> poll() override;
 			private:
-				std::ifstream device_file;
+				int fd;
 				linux_evdev_event event_cache;
 			};
 		}
